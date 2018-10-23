@@ -8,10 +8,12 @@ Created on Tue Oct 23 11:38:25 2018
 import requests
 import re
 from bs4 import BeautifulSoup
-from Bio import SeqIO
+import json
+
 
 types = ['antiA','antiB','antiV','antiH','antiF','antiP','antiD','antiT','antiC','antiO','taxis','antiI','antiE','antiS','surface','antiW']
 qid = 'http://aps.unmc.edu/AP/database/query_output.php?ID='
+APDURL = 'http://aps.unmc.edu'
 
 def getHTMLText(url,coding='gbk'):
     try:
@@ -24,6 +26,8 @@ def getHTMLText(url,coding='gbk'):
         return ""
 
 def extractSequence(url):
+    s = ''
+    print(url)
     html = getHTMLText(url)
     soup = BeautifulSoup(html, "html.parser")
     trlist = soup.find_all('tr')
@@ -41,13 +45,11 @@ def extractSequence(url):
         if found:
             break
     
-    print(s)
+    return s
     
 def fullProteinsList(soup, plist):
     data = soup.find_all('a',{'target':'_blank'})
     for a in data:
-        pid = a.string # for examp: AP00001
-        pidurl = qid + pid[2:]
         plist.append(a.string)
 
 
@@ -70,33 +72,56 @@ def downAPD(preurl, rootpage, filename):
         ws.writelines(pset)
 
 def downAMPsFromAPD():
-    amps = ['antiA','antiB','antiV','antiH','antiF','antiP','antiD','antiT','antiC','antiO','taxis','antiI','antiE','antiS','surface','antiW']
-    for a in amps:
+    for a in types:
         rootpage = '/AP/database/'+a+'.php'
-        downAPD('http://aps.unmc.edu',rootpage, a+'.txt')
+        downAPD(APDURL,rootpage, a+'.txt')
         
-def targetAMPs():
+def createAMPsBenchmark():
     root = 'E:\\Repoes\\AMPnet\\data\\'
-    AMPSeqs = {}
-    for seq_record in SeqIO.parse(root+'APD_AMPs.fa', 'fasta'):
-        AMPSeqs[seq_record.id] = seq_record.seq
-    
-    AMPTars = {}
-    amps = ['antiA','antiB','antiV','antiH','antiF','antiP','antiD','antiT','antiC','antiO','taxis','antiI','antiE','antiS','surface','antiW']
-    for a in amps:
+    AMPSequs = {}
+    AMPTargs = {}
+    for a in types:
         filename = root+a + '.txt'
         fr = open(filename, 'r')
         s = fr.read()
+        fr.close()
         pids = s.split()
-        for k in pids:
-            t = AMPTars.get(k)
-            if t is None:
-                t = []
-            AMPTars[k] = t.append(a)
-            
+        for key in pids:
+            print(key)
+            if AMPSequs.get(key) is None:
+                seq = extractSequence(qid+key[2:])
+                AMPSequs[key] = seq
+                AMPTargs[key] = [a]
+            else:
+                AMPTargs[key] = AMPTargs.get(key).append(a)
+                
+        
+    f1 = open('AMPSequence.fasta','w')   
+    json.dump(AMPSequs,f1,indent=4)
+    f1.close()
+
+    f2 = open('AMPTarget.txt','w')
+    json.dump(AMPTargs,f2,indent=4)
+    f2.close()
+
+def getAMPs():
+    f1 = open('AMPSequence.fasta','r')
+    AMPSequs = json.load(f1)   
+    f1.close()
+
+    f2 = open('AMPTarget.txt','r')
+    AMPTargs = json.load(f2)
+    f2.close()
+   
+    return (AMPSequs, AMPTargs)  
+'''   
 def main():
-    extractSequence('http://aps.unmc.edu/AP/database/query_output.php?ID=00001')
-            
+    #extractSequence('http://aps.unmc.edu/AP/database/query_output.php?ID=00001')
+    createAMPsBenchmark()
+    AMPSequs, AMPTargs = getAMPs()  
+          
 if __name__ == '__main__':
     main()
-    
+ '''   
+createAMPsBenchmark()
+AMPSequs, AMPTargs = getAMPs()  
