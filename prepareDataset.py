@@ -9,7 +9,7 @@ from Bio import SeqIO
 import json
 import os
 
-types = ['antiA','antiB','antiV','antiH','antiF','antiP','antiD','antiT','antiC','antiO','taxis','antiI','antiE','antiS','surface','antiW']
+files = ['antiB_60', 'antiF_60','antiV_60','antiH_60','antiP_60','antiC_60']
 
 def getAMPs():
     f1 = open('E:\\Repoes\\AMPnet\\data\\AMPSequence.json','r')
