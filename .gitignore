@@ -9,6 +9,5 @@ data/img/
 data/img_60/
 log/
 logs/
-model/
 cifar-10-batches-py/
 mnist/
