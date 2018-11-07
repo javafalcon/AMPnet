@@ -102,8 +102,8 @@ def load_data(imgsdir, targsfile):
         i = i + 1
     return X, Y
 
-#getBenchmarkDataset()
-X,Y = load_data('e:/repoes/ampnet/data/img_60/','e:/repoes/ampnet/data/benchmark_60_Targets.json')
+getBenchmarkDataset()
+#X,Y = load_data('e:/repoes/ampnet/data/img_60/','e:/repoes/ampnet/data/benchmark_60_Targets.json')
         
     
             
