@@ -36,7 +36,7 @@ network = max_pool_2d(network, 2)
 network = local_response_normalization(network)
 network = fully_connected(network, 128, activation='tanh')
 network = dropout(network, 0.8)
-network = fully_connected(network, 256, activation='tanh')
+network = fully_connected(network, 256, activation='tanh', name='feature')
 network = dropout(network, 0.8)
 network = fully_connected(network, 10, activation='softmax')
 network = regression(network, optimizer='adam', learning_rate=0.01,
