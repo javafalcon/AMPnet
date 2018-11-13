@@ -109,10 +109,7 @@ def writeSeqsFasta(AMPSequs):
         fw.writelines([AMPSequs[key],'\n'])
     fw.close()
 
-def getNotAMPs():
-    fn = 'E:/Repoes/AMPnet/data/notAMPs-100aas_50'
-    for recoder in SeqIO.parse(fn,'fasta'):
-        
+
 #X,Y = load_data('e:/repoes/ampnet/data/img_60/','e:/repoes/ampnet/data/benchmark_60_Targets.json')
         
     
