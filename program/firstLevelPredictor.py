@@ -12,11 +12,11 @@ from sklearn.metrics import accuracy_score, auc, roc_curve
 def loadDataFromArff(filename):
     data,meta = arff.loadarff(filename)
     n = len(data)
-    X = np.ndarray((n,512))
+    X = np.ndarray((n,256))
     Y = np.zeros(n)
     for i in range(n):
         d = data[i]
-        for j in range(512):
+        for j in range(256):
             X[i][j] = float(d[j])
         Y[i] = int(d[-1])
     return X, Y
@@ -37,18 +37,18 @@ def gaussionProcess(X_train, X_test, y_train):
     p = gpc.predict(X_test)
     return p
     
-filename = 'e:/repoes/ampnet/amp_and_notamp.arff'
+filename = 'e:/repoes/ampnet/amp_and_notamp_alnex.arff'
 X, y = loadDataFromArff(filename)
 
 # 留一法
 y_pred = np.zeros(1600)
 loo = LeaveOneOut()
 for train_index, test_index in loo.split(X):
-    print(test_index)
+    print("\r In predicting {}".format(test_index))
     X_train, X_test = X[train_index], X[test_index]
     y_train, y_test = y[train_index], y[test_index]
-    y_pred[test_index] = gaussionProcess(X_train, X_test, y_train)
-    
+    #y_pred[test_index] = gaussionProcess(X_train, X_test, y_train)
+    y_pred[test_index] = randomForest(X_train, X_test, y_train)
 accuracy = accuracy_score(y, y_pred)
 fpr, tpr, thresholds = roc_curve(y, y_pred, pos_label=1) 
 area = auc(fpr, tpr)
