@@ -56,8 +56,8 @@ y_pred = np.zeros(1600)
 loo = LeaveOneOut()
 for train_index, test_index in loo.split(X):
     print("\r In predicting {}".format(test_index))
-    X_train, X_test = X[train_index], X[test_index]
-    y_train, y_test = [y[train_index]], y[test_index]
+    X_train, X_test = X[train_index], [X[test_index]]
+    y_train, y_test = y[train_index], [y[test_index]]
     #y_pred[test_index] = gaussionProcess(X_train, X_test, y_train)
     #y_pred[test_index] = randomForest(X_train, X_test, y_train)
     y_pred[test_index] = libsvm(X_train, X_test, y_train, y_test)
