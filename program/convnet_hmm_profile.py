@@ -45,6 +45,20 @@ def load_hmm_prof():
         
     return X, y
 
+def LSTM(X_train, y_train):#, X_test, y_test
+    net = tflearn.input_data([None, 1000])
+    # Masking is not required for embedding, sequence length is computed prior to
+    # the embedding op and assigned as 'seq_length' attribute to the returned Tensor.
+    net = tflearn.embedding(net, input_dim=400, output_dim=128)
+    net = tflearn.lstm(net, 128, dropout=0.8, dynamic=True)
+    net = tflearn.fully_connected(net, 2, activation='softmax')
+    net = tflearn.regression(net, optimizer='adam', learning_rate=0.001,
+                         loss='categorical_crossentropy')
+
+    # Training
+    model = tflearn.DNN(net, tensorboard_verbose=0)
+    model.fit(X_train, y_train, validation_set=0.2, show_metric=True, batch_size=32)#(X_test, y_test)
+    
 def net(X_train, y_train, X_test, y_test):
     # Real-time data preprocessing
     img_prep = ImagePreprocessing()
@@ -114,8 +128,8 @@ X = X.reshape([-1,50,20,1])
 y = to_categorical(y,2)  
 X,y = shuffle(X,y) 
 #y_pred = jackknife_test(X,y)
-y_pred = cross_validate(X,y)
-
-accuracy = accuracy_score(y, y_pred)
-fpr, tpr, thresholds = roc_curve(y, y_pred, pos_label=1) 
-area = auc(fpr, tpr)             
+#y_pred = cross_validate(X,y)
+LSTM(X,y)
+#accuracy = accuracy_score(y, y_pred)
+#fpr, tpr, thresholds = roc_curve(y, y_pred, pos_label=1) 
+#area = auc(fpr, tpr)             
