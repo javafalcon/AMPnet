@@ -96,7 +96,9 @@ def cross_validate(X,y,n_splits=3):
         #print("TRAIN:", train_index, "TEST:", test_index)
         X_train, X_test = X[train_index], X[test_index]
         y_train, y_test = y[train_index], y[test_index]
-        y_pred[test_index] = libsvm(X_train, X_test, y_train, y_test)
+        #y_pred[test_index] = libsvm(X_train, X_test, y_train, y_test)
+        #y_pred[test_index] = randomForest(X_train, X_test, y_train)
+        y_pred[test_index] = gaussionProcess(X_train, X_test, y_train)
         
     return y_pred    
 #filename = 'e:/repoes/ampnet/amp_and_notamp_alnex.arff'
