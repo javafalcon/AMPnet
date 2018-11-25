@@ -6,7 +6,6 @@ Created on Tue Nov 13 20:10:42 2018
 """
 from scipy.io import arff
 import numpy as np
-from sklearn.model_selection import LeaveOneOut,KFold
 from sklearn.metrics import accuracy_score, auc, roc_curve
 from libsvmutil import libsvm_grid_search
 from svmutil import svm_train, svm_predict
@@ -61,8 +60,9 @@ def gaussionProcess(X_train, X_test, y_train):
     from sklearn.gaussian_process import GaussianProcessClassifier
     from sklearn.gaussian_process.kernels import RBF
     kernel = 1.0 * RBF(1.0)
-    gpc = GaussianProcessClassifier(kernel=kernel,random_state=0).fit(X, y)
-    gpc.score(X_train, y_train) 
+    gpc = GaussianProcessClassifier(kernel=kernel,random_state=0).fit(X_train, y_train)
+    #gpc.score(X_train, y_train) 
+    #print(X_test.shape)
     p = gpc.predict(X_test)
     return p
 
@@ -77,19 +77,21 @@ def libsvm(X_train, X_test, y_train, y_test):
 
 def jackknife(X,y):
     # 留一法
+    from sklearn.model_selection import LeaveOneOut
     y_pred = np.zeros(1600)
     loo = LeaveOneOut()
     for train_index, test_index in loo.split(X):
         print("\r In predicting {}".format(test_index))
-        X_train, X_test = X[train_index], [X[test_index]]
-        y_train, y_test = y[train_index], [y[test_index]]
-        #y_pred[test_index] = gaussionProcess(X_train, X_test, y_train)
+        X_train, X_test = X[train_index], X[test_index]
+        y_train, y_test = y[train_index], y[test_index]
+        y_pred[test_index] = gaussionProcess(X_train, X_test, y_train)
         #y_pred[test_index] = randomForest(X_train, X_test, y_train)
-        y_pred[test_index] = libsvm(X_train, X_test, y_train, y_test)  
+        #y_pred[test_index] = libsvm(X_train, X_test, y_train, y_test)  
         
     return y_pred
 
 def cross_validate(X,y,n_splits=3):
+    from sklearn.model_selection import KFold
     y_pred = np.zeros(1600)
     kf = KFold(n_splits=3)
     for train_index, test_index in kf.split(X):
@@ -104,8 +106,8 @@ def cross_validate(X,y,n_splits=3):
 #filename = 'e:/repoes/ampnet/amp_and_notamp_alnex.arff'
 #X, y = loadDataFromArff(filename)
 X,y = load_hmm_prof()
-#y_pred = jackknife(X,y)
-y_pred = cross_validate(X,y,5)
+y_pred = jackknife(X,y)
+#y_pred = cross_validate(X,y,5)
 accuracy = accuracy_score(y, y_pred)
 fpr, tpr, thresholds = roc_curve(y, y_pred, pos_label=1) 
 area = auc(fpr, tpr)
