@@ -117,9 +117,9 @@ def cross_validate(X,y,n_splits=3):
         tf.reset_default_graph()
         model = net(X_train, y_train, X_test, y_test)
         for (xx,k) in zip(X_test, test_index):
-            y = model.predict_label([xx])
+            py = model.predict_label([xx])
             #print(y)
-            y_pred[k] = y
+            y_pred[k] = py
     return y_pred
 
  
