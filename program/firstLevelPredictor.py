@@ -59,7 +59,7 @@ def randomForest(X_train, X_test, y_train):
 def gaussionProcess(X_train, X_test, y_train): 
     from sklearn.gaussian_process import GaussianProcessClassifier
     from sklearn.gaussian_process.kernels import RBF
-    kernel = 1.0 * RBF(1.0)
+    kernel = 1.0 * RBF(0.01)
     gpc = GaussianProcessClassifier(kernel=kernel,random_state=0).fit(X_train, y_train)
     #gpc.score(X_train, y_train) 
     #print(X_test.shape)
@@ -93,7 +93,7 @@ def jackknife(X,y):
 def cross_validate(X,y,n_splits=3):
     from sklearn.model_selection import KFold
     y_pred = np.zeros(1600)
-    kf = KFold(n_splits=3)
+    kf = KFold(n_splits)
     for train_index, test_index in kf.split(X):
         #print("TRAIN:", train_index, "TEST:", test_index)
         X_train, X_test = X[train_index], X[test_index]
@@ -106,7 +106,7 @@ def cross_validate(X,y,n_splits=3):
 #filename = 'e:/repoes/ampnet/amp_and_notamp_alnex.arff'
 #X, y = loadDataFromArff(filename)
 X,y = load_hmm_prof()
-y_pred = jackknife(X,y)
+pred = jackknife(X,y)
 #y_pred = cross_validate(X,y,5)
 accuracy = accuracy_score(y, y_pred)
 fpr, tpr, thresholds = roc_curve(y, y_pred, pos_label=1) 
