@@ -10,7 +10,6 @@ from tflearn.layers.core import input_data, dropout, fully_connected
 from tflearn.layers.conv import conv_2d, max_pool_2d
 from tflearn.layers.estimator import regression
 from tflearn.layers.normalization import local_response_normalization
-from tflearn.data_utils import shuffle, to_categorical
 
 def convnet_mnist(num_class):
     net = input_data(shape=[None,28,28,1], name='input')

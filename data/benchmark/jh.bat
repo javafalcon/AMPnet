@@ -1,2 +1,2 @@
-jackhmmer --chkhmm amp AMPs_50.fasta E:/uniprot_sprot.fasta
-jackhmmer --chkhmm notamp notAMPs_50.fasta E:/uniprot_sprot.fasta
+jackhmmer --chkhmm wpamp wpAMPs.fasta E:/uniprot_sprot.fasta
+jackhmmer --chkhmm wpnotamp wpnotAMPs.fasta E:/uniprot_sprot.fasta
