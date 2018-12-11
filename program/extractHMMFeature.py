@@ -46,6 +46,10 @@ def HMMProf(chk,out):
     f = open(out,'w')
     json.dump(prot,f,indent=4)
     f.close()            
-    
+'''   
 HMMProf('e:/repoes/ampnet/data/benchmark/wpamp-1.hmm','E:\\Repoes\\AMPnet\\data\\benchmark\\wpAMPs_hmm_profil.json')
 HMMProf('e:/repoes/ampnet/data/benchmark/wpnotamp-1.hmm','e:/Repoes/ampnet/data/benchmark/wpnotAMPs_hmm_profil.json')
+'''
+
+HMMProf('e:/repoes/ampnet/data/benchmark/inamp-1.hmm','E:/Repoes/AMPnet/data/benchmark/includeAMPs_hmm_profil.json')
+HMMProf('e:/repoes/ampnet/data/benchmark/examp-1.hmm','e:/Repoes/ampnet/data/benchmark/excludeAMPs_hmm_profil.json')

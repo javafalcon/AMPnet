@@ -57,22 +57,23 @@ def getBenchmarkDataset():
     keyList=[]
     for f in files:
         for seq_record in SeqIO.parse('E:\\Repoes\\AMPnet\\data\\' + f, 'fasta'):
-            keyList.append(seq_record.id)
+            keyList.append(str(seq_record.id))
     
     keySet = set(keyList)
+    print(len(keySet))
     for key in keySet:
         benchmarkTars[key] = AMPTargs[key]
         benchmarkSeqs[key] = AMPSequs[key]
     
-    f = open('E:\\Repoes\\AMPnet\\data\\benchmark_60_Targets.json','w')
+    f = open('E:\\Repoes\\AMPnet\\data\\amps_60_Targets.json','w')
     json.dump(benchmarkTars,f,indent=4)
     f.close()
     
-    f1 = open('E:\\Repoes\\AMPnet\\data\\benchmark_60_Sequence.json','w')   
+    f1 = open('E:\\Repoes\\AMPnet\\data\\amps_60_Sequence.json','w')   
     json.dump(benchmarkSeqs,f1,indent=4)
     f1.close()
     
-    saveSeqsCAImages(benchmarkSeqs)
+    #saveSeqsCAImages(benchmarkSeqs)
 
 def load_data(imgsdir, targsfile):
     f = open(targsfile,'r')
@@ -102,15 +103,31 @@ def load_data(imgsdir, targsfile):
         i = i + 1
     return X, Y
 
-def writeSeqsFasta(AMPSequs):
-    fw = open('e:/repoes/ampnet/data/AMPs.fasta','w')
+def writeSeqsFasta(AMPSequs:dict, filename):
+    fw = open(filename,'w')
     for key in AMPSequs.keys():
         fw.writelines(['>',key,'\n'])
         fw.writelines([AMPSequs[key],'\n'])
     fw.close()
 
-
+#getBenchmarkDataset()
 #X,Y = load_data('e:/repoes/ampnet/data/img_60/','e:/repoes/ampnet/data/benchmark_60_Targets.json')
-        
-    
+
+'''
+#fr = open('../data/amps_60_sequence.json','r')
+#p = json.load(fr)
+#fr.close()
+'''
+#writeSeqsFasta(p, '../data/includ_amps_60')
+
+'''
+record = SeqIO.parse('../data/includ_amps_60.fasta','fasta')
+include_keys = [str(x.id) for x in record]
+record.close()
+exclude = {}
+for seq_record in SeqIO.parse('../data/AMPs.fasta','fasta'):
+    if str(seq_record.id) not in include_keys:
+        exclude[str(seq_record.id)] = str(seq_record.seq)
+writeSeqsFasta(exclude, '../data/exclude_amps.fasta')
+'''    
             
